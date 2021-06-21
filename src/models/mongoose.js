@@ -6,9 +6,7 @@ const { encryptPassword } = require('../helpers/password');
 
 const uri = process.env.MONGODB_URI;
 
-//mongoose.connect(`mongodb+srv://FSD0321_grupoa:grupoa_0321@airbnb.o8lhc.mongodb.net/airbnb_api?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-
 
 const Task = mongoose.model('Task', {
     title: String,
