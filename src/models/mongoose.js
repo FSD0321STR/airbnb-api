@@ -36,6 +36,13 @@ const Board = mongoose.model('Board', {
 const userSchema = new mongoose.Schema({
     email: String,
     password: String,
+    image: {
+        name: String,
+        img: {
+            data: Buffer,
+            contentType: String,
+        }
+    },
     boards: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Board'
