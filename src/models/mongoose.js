@@ -34,8 +34,13 @@ const Board = mongoose.model('Board', {
 });
 
 const userSchema = new mongoose.Schema({
+    name: String,
+    lastName: String,
     email: String,
+    phone: String,
     password: String,
+    rol: String,
+    activo: Boolean,
     image: {
         name: String,
         img: {
@@ -43,9 +48,9 @@ const userSchema = new mongoose.Schema({
             contentType: String,
         }
     },
-    boards: [{
+    alojamientos: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Board'
+        ref: 'Alojamientos'
     }],
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
