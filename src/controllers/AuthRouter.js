@@ -9,19 +9,23 @@ const path = require('path');
 const router = Router();
 
 router.post('/register', upload.single('image'), async(req, res) => {
+<<<<<<< HEAD
     console.log(req.file.name);
+=======
+>>>>>>> 48455ad95f1f675f333f963e2c8f9efb9272dacc
     const rol = 'user';
     const activo = true;
     const image = {
         name: req.file.originalname,
         img: {
-            data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+            data: fs.readFileSync(path.join(__dirname + '/../../uploads/' + req.file.filename)),
             contentType: req.file.mimetype,
         }
     }
     req.body.rol = rol;
     req.body.activo = activo;
     req.body.image = image;
+<<<<<<< HEAD
     //console.log(req.body);
     
     const user = await AuthService.register(req.body);
@@ -30,6 +34,17 @@ router.post('/register', upload.single('image'), async(req, res) => {
     }
      const token = await createToken({ id: user._id }); // generar token;
      return res.status(201).json({ token: token });
+=======
+    req.body.rol = rol;
+    req.body.activo = activo;
+    //console.log(req.body);
+    const user = await AuthService.register(req.body);
+    if (!user) {
+        return res.status(403).json({ message: "The email is already in use" });
+    }
+    const token = await createToken({ id: user._id }); // generar token;
+    return res.status(201).json({ token: token });
+>>>>>>> 48455ad95f1f675f333f963e2c8f9efb9272dacc
 });
 
 router.post('/login', async(req, res) => {
