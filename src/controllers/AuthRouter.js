@@ -3,11 +3,15 @@ const Multer = require('multer')
 const upload = Multer({ dest: "uploads/" });
 const { Router } = require('express');
 const { createToken } = require('../helpers/token');
+const fs = require('fs');
+const path = require('path');
 
 const router = Router();
 
 router.post('/register', upload.single('image'), async(req, res) => {
     console.log(req.file.name);
+    const rol = 'user';
+    const activo = true;
     const image = {
         name: req.file.originalname,
         img: {
@@ -15,13 +19,17 @@ router.post('/register', upload.single('image'), async(req, res) => {
             contentType: req.file.mimetype,
         }
     }
+    req.body.rol = rol;
+    req.body.activo = activo;
     req.body.image = image;
+    //console.log(req.body);
+    
     const user = await AuthService.register(req.body);
-    // if (!user) {
-    //     return res.status(403).json({ message: "The email is already in use" });
-    // }
-    // const token = await createToken({ id: user._id }); // generar token;
-    // return res.status(201).json({ token: token });
+     if (!user) {
+        return res.status(403).json({ message: "The email is already in use" });
+    }
+     const token = await createToken({ id: user._id }); // generar token;
+     return res.status(201).json({ token: token });
 });
 
 router.post('/login', async(req, res) => {
