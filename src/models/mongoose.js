@@ -2,6 +2,7 @@ require('dotenv').config();
 const Ajv = require('ajv');
 const ajv = new Ajv();
 const mongoose = require('mongoose');
+mongoose.set('useFindAndModify', false);
 const { encryptPassword } = require('../helpers/password');
 
 const uri = process.env.MONGODB_URI;
