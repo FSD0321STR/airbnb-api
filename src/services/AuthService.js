@@ -34,6 +34,16 @@ const editUser = async(editUser, id) => {
     return false;
 }
 
+const deleteUser = async(id) => {
+    console.log(id);
+    let user = await UserService.findById(id);
+    if (user) {
+        await User.deleteOne({ _id: id });
+        return true;
+    }
+    return false;
+}
+
 const login = async({ email, password }) => {
 
     const user = await UserService.findByEmail(email);
@@ -52,5 +62,6 @@ const login = async({ email, password }) => {
 module.exports = {
     register,
     editUser,
+    deleteUser,
     login,
 }

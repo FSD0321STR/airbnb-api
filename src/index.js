@@ -9,6 +9,8 @@ const port = 8000;
 
 
 const AuthRouter = require('./controllers/AuthRouter');
+const TipoAlojamientosRouter = require('./controllers/TipoAlojamientosRouter');
+const ServiciosAlojamientosRouter = require('./controllers/ServiciosAlojamientosRouter');
 
 app.use(
     cors({
@@ -20,5 +22,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(AuthRouter);
+app.use(TipoAlojamientosRouter);
+app.use(ServiciosAlojamientosRouter);
 
 app.listen(port, () => console.log(`Listening on http://localhost:${port}`));

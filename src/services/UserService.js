@@ -16,9 +16,19 @@ const findById = (id) => {
     return User.findById(id);
 };
 
+const readAll = () => {
+    return User.find({});
+}
+
+const adminReadAll = () => {
+    return User.find({}, { image: false })
+}
+
 module.exports = {
     create,
     exists,
     findByEmail,
     findById,
+    readAll,
+    adminReadAll,
 }

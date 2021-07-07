@@ -20,6 +20,20 @@ const Task = mongoose.model('Task', {
     updatedAt: { type: Date, default: Date.now },
 });
 
+const Tipos = mongoose.model('Tipos', {
+    title: String,
+    visible: Boolean,
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
+});
+
+const Servicios = mongoose.model('Servicios', {
+    title: String,
+    visible: Boolean,
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
+});
+
 const Board = mongoose.model('Board', {
     title: String,
     tasks: [{
@@ -129,6 +143,8 @@ module.exports = {
     Task,
     Board,
     User,
+    Tipos,
+    Servicios,
     validateTask,
     validateBoard,
 }
