@@ -55,14 +55,33 @@ userSchema.pre('save', async function(next) {
     next();
 });
 
+const alojamientoSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    phone: String,
+    address: String,
+    location: String,
+    state: String,
+    country: String,
+    type: String,
+    numberGuests: Number,
+    services: String,
+    description: String,
+
+    files: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Galery'
+    }],
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
+});
+
 const User = mongoose.model('User', userSchema);
-
-
-
-
+const Alojamiento = mongoose.model('Alojamiento', alojamientoSchema);
 
 module.exports = {
     User,
     Tipos,
     Servicios,
+    Alojamiento,
 }

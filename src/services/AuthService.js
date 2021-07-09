@@ -3,7 +3,7 @@ const { User } = require('../models/mongoose');
 const { comparePasswords } = require('../helpers/password');
 
 const register = async({ name, lastName, rol, activo, phone, email, password, image }) => {
-    //console.log(email);
+
     let user = await UserService.findByEmail(email);
     if (user) {
         return false;

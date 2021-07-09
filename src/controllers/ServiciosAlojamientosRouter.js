@@ -1,69 +1,89 @@
-const ServiciosAlojamientoService = require('../services/ServiciosAlojamientoService');
-const ServiciosService = require('../services/ServiciosService');
+const ServicesAlojamiento = require('../services/ServicesAlojamiento');
+const AlojamientoService = require('../services/AlojamientoService');
+const Multer = require('multer')
+const upload = Multer({ dest: "uploads/" });
 const { Router } = require('express');
+const fs = require('fs');
+const path = require('path');
+
 const router = Router();
 
-router.get('/servicios-alojamiento', async(req, res) => {
-    //console.log('aa');
-    const servicios = await ServiciosService.readAll();
-    if (!servicios) {
-        return res.status(404).json({ message: "No existen servicios de alojamientos en la base de datos" });
+
+router.post('/createalojamiento', async(req, res) => {
+   
+    const rol = 'user';
+    const activo = true;
+    const image = {
+        name: req.file.originalname,
+        img: {
+            data: fs.readFileSync(path.join(__dirname + '/../../uploads/' + req.file.filename)),
+            contentType: req.file.mimetype,
+        }
     }
-    return res.status(200).json({ servicios: servicios });
+    req.body.rol = rol;
+    req.body.activo = activo;
+    req.body.image = [{image}];
+    
+    const alojamiento = await ServicesAlojamiento.registerAlojamiento(req.body);
+    if (!alojamiento) {
+        return res.status(403).json({ messageError: "Este alojamiento ya existe" });
+    }
+    const alojamientoId = { id: alojamiento._id };
+    return res.status(201).json({ alojamientoId: alojamientoId, messageOk: "El alojamiento ha sido creado con éxito" });
 });
 
-router.get('/servicio-alojamiento/:id', async(req, res) => {
+router.patch('/alojamiento/:id', upload.array('image'), async(req, res) => {
     const { id } = req.params;
-    //console.log(id);
-    //console.log('aa');
-    const servicios = await ServiciosService.findById(id);
-    if (!servicios) {
-        return res.status(404).json({ message: "No existen un tipo de alojamiento con esta id" });
+
+    if (req.file !== undefined) {
+        const image = {
+            name: req.file.originalname,
+            img: {
+                data: fs.readFileSync(path.join(__dirname + '/../../uploads/' + req.file.filename)),
+                contentType: req.file.mimetype,
+            }
+        }
+        req.body.image = [{image}];
     }
-    return res.status(200).json({ servicios: servicios });
+    
+    const alojamiento = await ServicesAlojamiento.editAlojamiento(req.body, id);
+    
+    if (!alojamiento) {
+        return res.status(403).json({ messageError: "No existe un alojamiento con esta id." });
+    }
+    return res.status(200).json({ messageOk: "Alojamiento modificado con éxito" });
 });
 
-router.post('/create-servicio-alojamiento', async(req, res) => {
-    //console.log(req.body);
-    const visible = true;
-    req.body.visible = visible;
-    const servicio = await ServiciosAlojamientoService.createServicio(req.body);
-    if (!servicio) {
-        return res.status(403).json({ messageError: "Este servicio de alojamiento ya existe" });
+
+
+router.get('/alojamiento', async(req, res) => {
+    const alojamientos = await AlojamientoService.ReadAllAlojamiento();
+   
+    if (!alojamientos) {
+        return res.status(404).json({ message: "No existen alojamientos en la base de datos" });
     }
-    return res.status(201).json({ messageOk: "Servicio de alojamiento creado" });
+    return res.status(200).json({ alojamientos });
 });
 
-router.patch('/modify-servicio-visible/:id', async(req, res) => {
+router.get('/alojamiento/:id', async(req, res) => {
     const { id } = req.params;
-    //console.log(req.body);
-    // const visible = true;
-    // req.body.visible = visible;
-    const servicio = await ServiciosAlojamientoService.editVisibleServicio(req.body, id);
-    if (!servicio) {
-        return res.status(403).json({ messageError: "El servicio de alojamiento no se ha podido modificar" });
+    const alojamientos = await AlojamientoService.findByIdAlojamiento(id);
+    
+    if (!alojamientos) {
+        return res.status(404).json({ message: "No existe un alojamiento con esta id." });
     }
-    return res.status(200).json({ messageOk: "Servicio de alojamiento modificado" });
+    return res.status(200).json({ alojamientos });
 });
 
-router.patch('/servicio-alojamiento/:id', async(req, res) => {
-    const { id } = req.params;
-    //console.log(req.body);
-    const servicioAlojamiento = await ServiciosAlojamientoService.editServicio(req.body, id);
-    if (!servicioAlojamiento) {
-        return res.status(404).json({ messageError: "No existe un servicio con esta id." });
-    }
-    return res.status(201).json({ messageOk: "Servicio modificado con éxito." });
-});
 
-router.delete('/servicio-alojamiento/:id', async(req, res) => {
+router.delete('/alojamiento/:id', async(req, res) => {
     const { id } = req.params;
-    //console.log(id);
-    const servicio = await ServiciosAlojamientoService.deleteServicioAlojamiento(id);
-    if (!servicio) {
-        return res.status(404).json({ messageError: "No existe un servicio de alojamiento con esta id." });
+    const alojamiento = await ServicesAlojamiento.deleteAlojamiento(id);
+    
+    if (!alojamiento) {
+        return res.status(404).json({ messageError: "No existe un alojamiento con esta id." });
     }
-    return res.status(201).json({ messageOk: "Servicio de alojamiento eliminado con éxito." });
+    return res.status(201).json({ messageOk: "El alojamiento se ha eliminado con éxito." });
 });
 
 
