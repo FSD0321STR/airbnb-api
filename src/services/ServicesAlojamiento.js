@@ -1,18 +1,18 @@
 const AlojamientoService = require('./AlojamientoService');
 const { Alojamiento } = require('../models/mongoose');
 
-const registerAlojamiento = async({ name, phone, email, address, location, state, country, type, numberGuests, services, description, files }) => {
+const registerAlojamiento = async({ name, phone, email, address, location, state, country, type, numberGuests, services, description }) => {
 
-    let alojamiento = await AlojamientoService.findById(id);
-    if (!alojamiento) {
-        return false;
-    }
-    alojamiento = await AlojamientoService.create({ name, phone, email, address, location, state, country, type, numberGuests, services, description, files });
+    // let alojamiento = await AlojamientoService.findById(id);
+    // if (!alojamiento) {
+    //     return false;
+    // }
+    alojamiento = await AlojamientoService.createAlojamiento({ name, phone, email, address, location, state, country, type, numberGuests, services, description });
     return alojamiento;
 }
 
 const editAlojamiento = async(editAlojamiento, id) => {
-    let alojamiento = await AlojamientoService.findById(id);
+    let alojamiento = await AlojamientoService.findByIdAlojamiento(id);
     if (alojamiento) {
         const filter = { _id: id };
         const update = {
@@ -30,7 +30,7 @@ const editAlojamiento = async(editAlojamiento, id) => {
             files: editAlojamiento.files,
         };
         if (editAlojamiento.files === undefined) delete update.files;
-    
+
         await Alojamiento.findOneAndUpdate(filter, update);
         return true;
     }
@@ -38,7 +38,7 @@ const editAlojamiento = async(editAlojamiento, id) => {
 }
 
 const deleteAlojamiento = async(id) => {
-    let alojamiento = await AlojamientoService.findById(id);
+    let alojamiento = await AlojamientoService.findByIdAlojamiento(id);
     if (alojamiento) {
         await Alojamiento.deleteOne({ _id: id });
         return true;

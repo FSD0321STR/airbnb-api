@@ -68,10 +68,10 @@ const alojamientoSchema = new mongoose.Schema({
     services: String,
     description: String,
 
-    files: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Galery'
-    }],
+    // files: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Galery'
+    // }],
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
 });

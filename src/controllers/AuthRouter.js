@@ -10,6 +10,7 @@ const path = require('path');
 const router = Router();
 
 router.post('/register', upload.single('image'), async(req, res) => {
+    //console.log(req.body);
     const rol = 'user';
     const activo = true;
     const image = {
@@ -22,7 +23,7 @@ router.post('/register', upload.single('image'), async(req, res) => {
     req.body.rol = rol;
     req.body.activo = activo;
     req.body.image = image;
-    
+
     const user = await AuthService.register(req.body);
     if (!user) {
         return res.status(403).json({ message: "The email is already in use" });

@@ -10,21 +10,22 @@ const router = Router();
 
 
 router.post('/createalojamiento', async(req, res) => {
-   
-    const rol = 'user';
-    const activo = true;
-    const image = {
-        name: req.file.originalname,
-        img: {
-            data: fs.readFileSync(path.join(__dirname + '/../../uploads/' + req.file.filename)),
-            contentType: req.file.mimetype,
-        }
-    }
-    req.body.rol = rol;
-    req.body.activo = activo;
-    req.body.image = [{image}];
-    
-    const alojamiento = await ServicesAlojamiento.registerAlojamiento(req.body);
+    //console.log('a');
+    const newAlojamiento = req.body.dataAlojamiento;
+    //const rol = 'user';
+    //const activo = true;
+    // const image = {
+    //     name: req.file.originalname,
+    //     img: {
+    //         data: fs.readFileSync(path.join(__dirname + '/../../uploads/' + req.file.filename)),
+    //         contentType: req.file.mimetype,
+    //     }
+    // }
+    // req.body.rol = rol;
+    // req.body.activo = activo;
+    // req.body.image = [{ image }];
+
+    const alojamiento = await ServicesAlojamiento.registerAlojamiento(newAlojamiento);
     if (!alojamiento) {
         return res.status(403).json({ messageError: "Este alojamiento ya existe" });
     }
@@ -43,11 +44,11 @@ router.patch('/alojamiento/:id', upload.array('image'), async(req, res) => {
                 contentType: req.file.mimetype,
             }
         }
-        req.body.image = [{image}];
+        req.body.image = [{ image }];
     }
-    
+
     const alojamiento = await ServicesAlojamiento.editAlojamiento(req.body, id);
-    
+
     if (!alojamiento) {
         return res.status(403).json({ messageError: "No existe un alojamiento con esta id." });
     }
@@ -58,7 +59,7 @@ router.patch('/alojamiento/:id', upload.array('image'), async(req, res) => {
 
 router.get('/alojamiento', async(req, res) => {
     const alojamientos = await AlojamientoService.ReadAllAlojamiento();
-   
+
     if (!alojamientos) {
         return res.status(404).json({ message: "No existen alojamientos en la base de datos" });
     }
@@ -68,7 +69,7 @@ router.get('/alojamiento', async(req, res) => {
 router.get('/alojamiento/:id', async(req, res) => {
     const { id } = req.params;
     const alojamientos = await AlojamientoService.findByIdAlojamiento(id);
-    
+
     if (!alojamientos) {
         return res.status(404).json({ message: "No existe un alojamiento con esta id." });
     }
@@ -79,7 +80,7 @@ router.get('/alojamiento/:id', async(req, res) => {
 router.delete('/alojamiento/:id', async(req, res) => {
     const { id } = req.params;
     const alojamiento = await ServicesAlojamiento.deleteAlojamiento(id);
-    
+
     if (!alojamiento) {
         return res.status(404).json({ messageError: "No existe un alojamiento con esta id." });
     }
