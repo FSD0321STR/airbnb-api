@@ -1,7 +1,9 @@
-const { Alojamiento } = require('../models/mongoose');
+const { Alojamiento, User } = require('../models/mongoose');
 
-const createAlojamiento = (fields) => {
-    return new Alojamiento(fields).save();
+const createAlojamiento = async(fields) => {
+    const alojamiento = await new Alojamiento(fields).save();
+    await User.findByIdAndUpdate(alojamiento.userId, { $push: { alojamientos: alojamiento.id } });
+    return alojamiento;
 };
 
 const existsAlojamiento = (id) => {
@@ -16,9 +18,14 @@ const ReadAllAlojamiento = () => {
     return Alojamiento.find({}, { files: false })
 }
 
+const findAlojamientosUser = (id) => {
+    return Alojamiento.find({ userId: id });
+}
+
 module.exports = {
     createAlojamiento,
     existsAlojamiento,
     findByIdAlojamiento,
     ReadAllAlojamiento,
+    findAlojamientosUser,
 }

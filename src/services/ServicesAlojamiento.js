@@ -1,13 +1,10 @@
 const AlojamientoService = require('./AlojamientoService');
 const { Alojamiento } = require('../models/mongoose');
 
-const registerAlojamiento = async({ name, phone, email, address, location, state, country, type, numberGuests, services, description }) => {
+const registerAlojamiento = async({ name, phone, email, address, location, state, country, type, numberGuests, services, description, precio, files, userId }) => {
 
-    // let alojamiento = await AlojamientoService.findById(id);
-    // if (!alojamiento) {
-    //     return false;
-    // }
-    alojamiento = await AlojamientoService.createAlojamiento({ name, phone, email, address, location, state, country, type, numberGuests, services, description });
+    //console.log(files);
+    const alojamiento = await AlojamientoService.createAlojamiento({ name, phone, email, address, location, state, country, type, numberGuests, services, description, precio, files, userId });
     return alojamiento;
 }
 

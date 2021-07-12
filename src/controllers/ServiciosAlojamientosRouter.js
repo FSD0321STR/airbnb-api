@@ -9,23 +9,31 @@ const path = require('path');
 const router = Router();
 
 
-router.post('/createalojamiento', async(req, res) => {
-    //console.log('a');
-    const newAlojamiento = req.body.dataAlojamiento;
-    //const rol = 'user';
+router.post('/createalojamiento', upload.array('files', 6), async(req, res) => {
+    //console.log(req.files);
+    //console.log(req.body);
+    const arrayFiles = [];
+    //const newAlojamiento = req.body;
+    //console.log(newAlojamiento);
+    // //const rol = 'user';
     //const activo = true;
-    // const image = {
-    //     name: req.file.originalname,
-    //     img: {
-    //         data: fs.readFileSync(path.join(__dirname + '/../../uploads/' + req.file.filename)),
-    //         contentType: req.file.mimetype,
-    //     }
-    // }
-    // req.body.rol = rol;
-    // req.body.activo = activo;
-    // req.body.image = [{ image }];
+    req.files.forEach(file => {
+        const image = {
+            name: file.originalname,
+            img: {
+                data: fs.readFileSync(path.join(__dirname + '/../../uploads/' + file.filename)),
+                contentType: file.mimetype,
+            }
+        }
+        arrayFiles.push(image);
+    });
 
-    const alojamiento = await ServicesAlojamiento.registerAlojamiento(newAlojamiento);
+    //req.body.rol = rol;
+    //req.body.activo = activo;
+    req.body.files = arrayFiles;
+    //console.log(req.body.files);
+
+    const alojamiento = await ServicesAlojamiento.registerAlojamiento(req.body);
     if (!alojamiento) {
         return res.status(403).json({ messageError: "Este alojamiento ya existe" });
     }
@@ -70,6 +78,17 @@ router.get('/alojamiento/:id', async(req, res) => {
     const { id } = req.params;
     const alojamientos = await AlojamientoService.findByIdAlojamiento(id);
 
+    if (!alojamientos) {
+        return res.status(404).json({ message: "No existe un alojamiento con esta id." });
+    }
+    return res.status(200).json({ alojamientos });
+});
+
+router.get('/alojamientos-user/:id', async(req, res) => {
+    const { id } = req.params;
+    //console.log(id);
+    const alojamientos = await AlojamientoService.findAlojamientosUser(id);
+    //console.log(alojamientos);
     if (!alojamientos) {
         return res.status(404).json({ message: "No existe un alojamiento con esta id." });
     }

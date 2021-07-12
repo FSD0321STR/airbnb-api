@@ -67,7 +67,18 @@ const alojamientoSchema = new mongoose.Schema({
     numberGuests: Number,
     services: String,
     description: String,
-
+    precio: Number,
+    files: [{
+        name: String,
+        img: {
+            data: Buffer,
+            contentType: String,
+        }
+    }],
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    },
     // files: [{
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: 'Galery'
