@@ -41,18 +41,19 @@ router.post('/createalojamiento', upload.array('files', 6), async(req, res) => {
     return res.status(201).json({ alojamientoId: alojamientoId, messageOk: "El alojamiento ha sido creado con éxito" });
 });
 
-router.patch('/alojamiento/:id', upload.array('image'), async(req, res) => {
+router.patch('/alojamiento/:id', upload.array('files', 6), async(req, res) => {
     const { id } = req.params;
+    //console.log(req.files[0].filename);
 
-    if (req.file !== undefined) {
-        const image = {
-            name: req.file.originalname,
+    if (req.files !== undefined) {
+        const files = {
+            name: req.files[0].originalname,
             img: {
-                data: fs.readFileSync(path.join(__dirname + '/../../uploads/' + req.file.filename)),
-                contentType: req.file.mimetype,
+                data: fs.readFileSync(path.join(__dirname + '/../../uploads/' + req.files[0].filename)),
+                contentType: req.files[0].mimetype,
             }
         }
-        req.body.image = [{ image }];
+        req.body.files = files;
     }
 
     const alojamiento = await ServicesAlojamiento.editAlojamiento(req.body, id);
@@ -76,12 +77,13 @@ router.get('/alojamiento', async(req, res) => {
 
 router.get('/alojamiento/:id', async(req, res) => {
     const { id } = req.params;
-    const alojamientos = await AlojamientoService.findByIdAlojamiento(id);
+    //console.log(id);
+    const alojamiento = await AlojamientoService.findByIdAlojamiento(id);
 
-    if (!alojamientos) {
+    if (!alojamiento) {
         return res.status(404).json({ message: "No existe un alojamiento con esta id." });
     }
-    return res.status(200).json({ alojamientos });
+    return res.status(200).json({ alojamiento });
 });
 
 router.get('/alojamientos-user/:id', async(req, res) => {
@@ -98,6 +100,7 @@ router.get('/alojamientos-user/:id', async(req, res) => {
 
 router.delete('/alojamiento/:id', async(req, res) => {
     const { id } = req.params;
+    //console.log(id);
     const alojamiento = await ServicesAlojamiento.deleteAlojamiento(id);
 
     if (!alojamiento) {

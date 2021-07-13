@@ -10,6 +10,7 @@ const registerAlojamiento = async({ name, phone, email, address, location, state
 
 const editAlojamiento = async(editAlojamiento, id) => {
     let alojamiento = await AlojamientoService.findByIdAlojamiento(id);
+    //console.log(editAlojamiento.files);
     if (alojamiento) {
         const filter = { _id: id };
         const update = {
@@ -24,6 +25,7 @@ const editAlojamiento = async(editAlojamiento, id) => {
             numberGuests: editAlojamiento.numberGuests,
             services: editAlojamiento.services,
             description: editAlojamiento.description,
+            precio: editAlojamiento.precio,
             files: editAlojamiento.files,
         };
         if (editAlojamiento.files === undefined) delete update.files;
