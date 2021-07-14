@@ -15,7 +15,7 @@ const findByIdAlojamiento = (id) => {
 };
 
 const ReadAllAlojamiento = () => {
-    return Alojamiento.find({}, { files: false })
+    return Alojamiento.find({});
 }
 
 const findAlojamientosUser = (id) => {

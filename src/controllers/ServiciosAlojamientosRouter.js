@@ -66,7 +66,7 @@ router.patch('/alojamiento/:id', upload.array('files', 6), async(req, res) => {
 
 
 
-router.get('/alojamiento', async(req, res) => {
+router.get('/alojamientos', async(req, res) => {
     const alojamientos = await AlojamientoService.ReadAllAlojamiento();
 
     if (!alojamientos) {
