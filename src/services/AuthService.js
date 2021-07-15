@@ -1,5 +1,6 @@
 const UserService = require('./UserService');
 const { User } = require('../models/mongoose');
+const { encryptPassword } = require('../helpers/password');
 const { comparePasswords } = require('../helpers/password');
 
 const register = async({ name, lastName, rol, activo, phone, email, password, image }) => {
@@ -28,6 +29,22 @@ const editUser = async(editUser, id) => {
         if (editUser.image.img === undefined) delete update.image;
         if (editUser.password === "") delete update.password;
 
+        await User.findOneAndUpdate(filter, update);
+        return true;
+    }
+    return false;
+}
+
+const recoveryPassword = async(email, password) => {
+
+    password = await encryptPassword(password); // encrypt;
+    //console.log(password);
+    let user = await UserService.findByEmail(email);
+    if (user) {
+        const filter = { email: email };
+        const update = {
+            password: password,
+        };
         await User.findOneAndUpdate(filter, update);
         return true;
     }
@@ -64,4 +81,5 @@ module.exports = {
     editUser,
     deleteUser,
     login,
+    recoveryPassword,
 }

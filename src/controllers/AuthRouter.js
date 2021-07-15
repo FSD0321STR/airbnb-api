@@ -45,6 +45,20 @@ router.post('/login', async(req, res) => {
     return res.status(200).json({ token: token, userId: userId, rol: rol });
 });
 
+router.patch('/recovery-password', async(req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    const user = await AuthService.recoveryPassword(email, password);
+    if (!user) {
+        return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const token = await createToken({ id: user._id }); // generar token;
+    const userId = { id: user._id };
+    const rol = { rol: user.rol };
+    return res.status(200).json({ token: token, userId: userId, rol: rol });
+});
+
 router.get('/user/:id', async(req, res) => {
     const { id } = req.params;
     const user = await UserService.findById(id);
