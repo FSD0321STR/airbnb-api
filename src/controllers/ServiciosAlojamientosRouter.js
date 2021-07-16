@@ -75,6 +75,18 @@ router.get('/alojamientos', async(req, res) => {
     return res.status(200).json({ alojamientos });
 });
 
+router.get('/search-alojamientos/:search', async(req, res) => {
+    const { search } = req.params;
+
+    const alojamientos = await AlojamientoService.searchAlojamientos(search);
+    //console.log(alojamientos);
+
+    if (!alojamientos) {
+        return res.status(404).json({ message: "No existen alojamientos en la base de datos" });
+    }
+    return res.status(200).json({ alojamientos });
+});
+
 router.get('/alojamiento/:id', async(req, res) => {
     const { id } = req.params;
     //console.log(id);

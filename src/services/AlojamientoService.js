@@ -22,10 +22,15 @@ const findAlojamientosUser = (id) => {
     return Alojamiento.find({ userId: id });
 }
 
+const searchAlojamientos = (search) => {
+    return Alojamiento.find({ state: search });
+}
+
 module.exports = {
     createAlojamiento,
     existsAlojamiento,
     findByIdAlojamiento,
     ReadAllAlojamiento,
     findAlojamientosUser,
+    searchAlojamientos,
 }
